@@ -1,7 +1,5 @@
 package um.tds.AppVideo.gui;
 
-import javax.swing.JFrame;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -13,18 +11,43 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.CardLayout;
 
 public class VentanaPrincipal {
-	private CardLayout cl;
 	private JFrame frame;
+	private CardLayout cl;
+	private JPanel activeCard;
+	Recientes recientes = new Recientes();
+	Login login = new Login();
+	Explorar explorar = new Explorar();
+	MisListas mislistas = new MisListas();
+	NuevasListas nuevaslistas = new NuevasListas();
+	Registro registro = new Registro();
+
+	public static void main(final String[] args) {
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaPrincipal ventana = new VentanaPrincipal();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+	}
 
 	public VentanaPrincipal() {
 		initialize();
@@ -37,12 +60,12 @@ public class VentanaPrincipal {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setVisible(true);
-		frame.setBounds(100, 100, 613, 225);
+		frame.setBounds(100, 100, 616, 376);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new CardLayout(0, 0));
+		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_1 = new JPanel();
-		frame.getContentPane().add(panel_1, "AppVideo");
+		frame.getContentPane().add(panel_1);
 		panel_1.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel = new JPanel();
@@ -76,7 +99,7 @@ public class VentanaPrincipal {
 		panelArriba.add(btnLogout);
 
 		JButton btnPremium = new JButton("Premium");
-		btnPremium.setForeground(Color.RED);
+		btnPremium.setForeground(Color.BLACK);
 		btnPremium.setBackground(Color.RED);
 		btnPremium.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelArriba.add(btnPremium);
@@ -106,19 +129,39 @@ public class VentanaPrincipal {
 		JButton btnNuevaLista = new JButton("Nueva Lista");
 		btnNuevaLista.setBackground(new Color(135, 206, 235));
 		panelMenu.add(btnNuevaLista);
-		
+
+		JPanel panelPrincipal = new JPanel();
+		panel_1.add(panelPrincipal, BorderLayout.CENTER);
+		panelPrincipal.setLayout(new CardLayout(0, 0));
+
+		panelPrincipal.add(login, "login");
+
+		panelPrincipal.add(registro, "registro");
+
+		panelPrincipal.add(explorar, "explorar");
+
+		panelPrincipal.add(mislistas, "mislistas");
+
+		panelPrincipal.add(nuevaslistas, "nuevaslistas");
+
+		panelPrincipal.add(recientes, "recientes");
+
+		cl = (CardLayout) (panelPrincipal.getLayout());
+		cl.show(panelPrincipal, "login");
 
 		// Registro
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Abrir ventana registro
+				cl.show(panelPrincipal, "registro");
+
 			}
 
 		});
 
+		// Login
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Abrir ventana login
+				cl.show(panelPrincipal, "login");
 			}
 
 		});
@@ -126,23 +169,27 @@ public class VentanaPrincipal {
 		// Logout
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Mostrar alerta o dejar asi
-
+				// Controlador.getUnicaInstancia().logout();
+				cl.show(panelPrincipal, "login");
 			}
-
 		});
 
 		// Premium
 		btnPremium.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Mostrar alerta o dejar asi
+				// TODO Si es usuario convertirlo en premium y mandar mensaje
+				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
+				
+
 			}
 		});
 
 		// Explorar
 		btnExplorar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Mostrar alerta o dejar asi
+				// TODO Si esta registrado cambiar de ventana
+				cl.show(panelPrincipal, "explorar");
+				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
 			}
 
 		});
@@ -150,23 +197,30 @@ public class VentanaPrincipal {
 		// Mis Listas
 		btnMisListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Mostrar alerta o dejar asi
+				// TODO Si esta registrado cambiar de ventana
+				cl.show(panelPrincipal, "mislistas");
+				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 
 		// Recientes
 		btnRecientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Mostrar alerta o dejar asi
+				// TODO Si esta registrado cambiar de ventana
+				cl.show(panelPrincipal, "recientes");
+				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 
 		// Nueva lista
 		btnNuevaLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Mostrar alerta o dejar asi
+				// TODO Si esta registrado cambiar de ventana
+				cl.show(panelPrincipal, "nuevaslistas");
+				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 
 	}
+
 }
