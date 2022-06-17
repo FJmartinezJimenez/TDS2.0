@@ -18,6 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
+import um.tds.AppVideo.controlador.Controlador;
+
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import java.awt.Dimension;
@@ -130,7 +132,7 @@ public class VentanaPrincipal {
 		btnNuevaLista.setBackground(new Color(135, 206, 235));
 		panelMenu.add(btnNuevaLista);
 
-		JPanel panelPrincipal = new JPanel();
+		final JPanel panelPrincipal = new JPanel();
 		panel_1.add(panelPrincipal, BorderLayout.CENTER);
 		panelPrincipal.setLayout(new CardLayout(0, 0));
 
@@ -152,8 +154,12 @@ public class VentanaPrincipal {
 		// Registro
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cl.show(panelPrincipal, "registro");
-
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					cl.show(panelPrincipal, "registro");
+				}else {
+					JOptionPane.showMessageDialog(frame, "Ya hay un usuario logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				}
 			}
 
 		});
@@ -161,7 +167,12 @@ public class VentanaPrincipal {
 		// Login
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cl.show(panelPrincipal, "login");
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					cl.show(panelPrincipal, "login");
+				}else {
+					JOptionPane.showMessageDialog(frame, "Ya hay un usuario logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				}
 			}
 
 		});
@@ -169,7 +180,6 @@ public class VentanaPrincipal {
 		// Logout
 		btnLogout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Controlador.getUnicaInstancia().logout();
 				cl.show(panelPrincipal, "login");
 			}
 		});
@@ -177,9 +187,14 @@ public class VentanaPrincipal {
 		// Premium
 		btnPremium.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Si es usuario convertirlo en premium y mandar mensaje
-				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
-				
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					Controlador.getUnicaInstancia().becomePremium();
+					JOptionPane.showMessageDialog(frame, "Enhorabuena ya eres premium", "Usuario Premium",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 
 			}
 		});
@@ -187,9 +202,12 @@ public class VentanaPrincipal {
 		// Explorar
 		btnExplorar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Si esta registrado cambiar de ventana
-				cl.show(panelPrincipal, "explorar");
-				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					cl.show(panelPrincipal, "explorar");
+				}
 			}
 
 		});
@@ -197,27 +215,36 @@ public class VentanaPrincipal {
 		// Mis Listas
 		btnMisListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Si esta registrado cambiar de ventana
-				cl.show(panelPrincipal, "mislistas");
-				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					cl.show(panelPrincipal, "mislistas");
+				}
 			}
 		});
 
 		// Recientes
 		btnRecientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Si esta registrado cambiar de ventana
-				cl.show(panelPrincipal, "recientes");
-				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					cl.show(panelPrincipal, "recientes");
+				}
 			}
 		});
 
 		// Nueva lista
 		btnNuevaLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Si esta registrado cambiar de ventana
-				cl.show(panelPrincipal, "nuevaslistas");
-				JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario", JOptionPane.WARNING_MESSAGE);
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
+							JOptionPane.WARNING_MESSAGE);
+				} else {
+					cl.show(panelPrincipal, "nuevaslistas");
+				}
 			}
 		});
 

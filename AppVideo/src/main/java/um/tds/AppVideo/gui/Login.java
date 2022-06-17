@@ -79,7 +79,7 @@ public class Login extends JPanel {
 		gbc_lblLogin.gridy = 1;
 		panelLogin.add(lblLogin, gbc_lblLogin);
 
-		JTextField textFieldLogin = new JTextField();
+		final JTextField textFieldLogin = new JTextField();
 		GridBagConstraints gbc_textFieldLogin = new GridBagConstraints();
 		gbc_textFieldLogin.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldLogin.gridwidth = 3;
@@ -97,7 +97,7 @@ public class Login extends JPanel {
 		gbc_lblPassword.gridy = 3;
 		panelLogin.add(lblPassword, gbc_lblPassword);
 
-		JPasswordField passwordField = new JPasswordField();
+		final JPasswordField passwordField = new JPasswordField();
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
 		gbc_passwordField.gridwidth = 3;
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
