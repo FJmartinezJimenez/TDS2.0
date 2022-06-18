@@ -1,18 +1,22 @@
 package um.tds.AppVideo.controlador;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 
 import um.tds.AppVideo.dominio.RepositorioUsuario;
 import um.tds.AppVideo.dominio.Usuario;
 import um.tds.AppVideo.persistencia.DAOException;
 import um.tds.AppVideo.persistencia.FactoriaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
+import um.tds.AppVideo.dominio.*;
 
 public class Controlador {
 	private Usuario usuario;
 
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
 	private RepositorioUsuario repositorioUsuario;
+	private RepositorioVideo repositorioVideo;
 
 	// Singleton
 	private static Controlador unicaInstancia;
@@ -46,6 +50,7 @@ public class Controlador {
 	// Iniciamos los repositorios
 	private void inicializarRepositorios() {
 		repositorioUsuario = RepositorioUsuario.getUnicaInstancia();
+		repositorioVideo = RepositorioVideo.getUnicaInstancia();
 	}
 
 	// Metodo de obtencion de Usuario
@@ -86,5 +91,29 @@ public class Controlador {
 			adaptadorUsuario.modifyUsuario(usuario);
 		}
 	}
+
+	// Obtener listas de videos
+	public List<ListaVideos> getListas() {
+		if (this.usuario != null) {
+			return this.usuario.getListasVideos();
+		} else {
+			return null;
+		}
+
+	}
+	
+	// Buscar videos por etiquetas
+		public Collection<Video> searchVideos(List<Etiqueta> etiqueta) {
+			return this.repositorioVideo.searchVideos(etiqueta);
+		}
+		
+		// Buscar videos por filtro
+		public Collection<Video> searchVideos(FiltroVideo filtro) {
+			if (this.usuario.isPremium()) {
+				return this.repositorioVideo.searchVideos(filtro);
+			} else {
+				return null;
+			}
+		}
 
 }
