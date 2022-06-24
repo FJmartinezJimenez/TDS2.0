@@ -233,12 +233,14 @@ public class Registro extends JPanel {
 
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				@SuppressWarnings("deprecation")
-				String password = passwordFieldRepContra.getText();
-
-				@SuppressWarnings("deprecation")
-				String password2 = passwordFieldContra.getText();
+				String password = "";
+				for (char c : passwordFieldContra.getPassword()) {
+					password += c;
+				}
+				String password2 = "";
+				for (char c : passwordFieldRepContra.getPassword()) {
+					password2 += c;
+				}
 				String nombre = textFieldNombre.getText().trim();
 				String email = textFieldEmail.getText().trim();
 				String usuario = textFieldUsuario.getText().trim();

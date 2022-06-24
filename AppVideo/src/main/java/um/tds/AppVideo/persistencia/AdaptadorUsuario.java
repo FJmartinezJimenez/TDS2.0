@@ -1,14 +1,20 @@
 package um.tds.AppVideo.persistencia;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
+import um.tds.AppVideo.dominio.FiltroVideo;
+import um.tds.AppVideo.dominio.ListaVideos;
 import um.tds.AppVideo.dominio.Usuario;
+import um.tds.AppVideo.dominio.Video;
 
 public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 	private ServicioPersistencia servPersistencia;
@@ -25,7 +31,8 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 	public AdaptadorUsuario() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
-	
+
+	@Override
 	public void addUsuario(Usuario usuario) {
 		// Comprobamos que no esta registrada la entidad
 		Entidad eUsuario = null;
@@ -49,6 +56,9 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 				new Propiedad("usuario", usuario.getUsuario()),
 				new Propiedad("password", usuario.getPassword()),
 				new Propiedad("fecha_nac", usuario.getFechaNacimiento().toString()),
+				new Propiedad("filtro", usuario.getFiltro().toString()),
+				new Propiedad("listas",getIdListas(usuario.getListasVideos())),
+				new Propiedad("recientes", getIdRecientes(usuario.getRecientes())),
 				new Propiedad("premium", "T"))
 				));
 		}else {
@@ -60,6 +70,9 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 					new Propiedad("usuario", usuario.getUsuario()),
 					new Propiedad("password", usuario.getPassword()),
 					new Propiedad("fecha_nac", usuario.getFechaNacimiento().toString()),
+					new Propiedad("filtro", usuario.getFiltro().toString()),
+					new Propiedad("listas",getIdListas(usuario.getListasVideos())),
+					new Propiedad("recientes", getIdRecientes(usuario.getRecientes())),
 					new Propiedad("premium", "F"))
 					));
 		}
@@ -69,11 +82,44 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 		usuario.setId(eUsuario.getId());
 	}
 
-	public void removeUsuario(Usuario usuario) {
-		// TODO Apéndice de método generado automáticamente
-		
+	private String getIdRecientes(List<Video> recientes) {
+		String aux = "";
+		for (Video video : recientes) {
+			aux += video.getId() + " ";
+		}
+		return aux.trim();
 	}
 
+
+	public String getIdListas(List<ListaVideos> listavideos) {
+		String aux = "";
+		for (ListaVideos lista : listavideos) {
+			aux += lista.getId() + " ";
+		}
+		return aux.trim();
+}
+
+
+	@Override
+	public void removeUsuario(Usuario usuario) {
+		//Recuperamos la entidad
+		Entidad e = servPersistencia.recuperarEntidad(usuario.getId());
+		if (e == null)
+			return;
+		//Borramos todas las listas asoaciadas a la entidad Usuario
+		try {
+			IAdaptadorListaVideosDAO adaptadorlistaVideo = FactoriaDAO.getInstancia().getListaVideosDAO();
+			for (ListaVideos l : usuario.getListasVideos()) {
+				adaptadorlistaVideo.removeListaVideo(l);
+			}
+		} catch (DAOException e1) {
+			e1.printStackTrace();
+		}
+		//Borramos la entidad
+		servPersistencia.borrarEntidad(e);
+	}
+
+	@Override
 	public void modifyUsuario(Usuario usuario) {
 		//Recuperamos la entidad
 		Entidad e = servPersistencia.recuperarEntidad(usuario.getId());
@@ -91,6 +137,12 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 				prop.setValor(usuario.getPassword());
 			}else if (prop.getNombre().equals("fecha_nac")) {
 				prop.setValor(usuario.getFechaNacimiento().toString());
+			}else if (prop.getNombre().equals("filtro")) {
+				prop.setValor(usuario.getFiltro().toString());
+			}else if (prop.getNombre().equals("listas")) {
+				prop.setValor(getIdListas(usuario.getListasVideos()));
+			}else if (prop.getNombre().equals("recientes")) {
+				prop.setValor(getIdRecientes(usuario.getRecientes()));
 			}else if (prop.getNombre().equals("premium")) {
 				if(usuario.isPremium()) {
 					prop.setValor("T");
@@ -102,14 +154,108 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 		}
 	}
 
+	@Override
 	public Usuario findUsuario(int codigo) {
-		// TODO Apéndice de método generado automáticamente
-		return null;
+		Entidad e = servPersistencia.recuperarEntidad(codigo);
+		if (e == null)
+			return null;
+		String nombre = servPersistencia.recuperarPropiedadEntidad(e, "nombre");
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(e, "apellidos");
+		String email = servPersistencia.recuperarPropiedadEntidad(e, "email");
+		String user = servPersistencia.recuperarPropiedadEntidad(e, "usuario");
+		String password = servPersistencia.recuperarPropiedadEntidad(e, "password");
+		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(e, "fecha_nac");
+		String filtro = servPersistencia.recuperarPropiedadEntidad(e, "filtro");
+		String premium = servPersistencia.recuperarPropiedadEntidad(e, "premium");
+		boolean prem = false;
+		if (premium.equals("T"))
+			prem = true;
+		else
+			prem = false;
+		
+		FiltroVideo f = null;
+		try {
+			f = (FiltroVideo) Class.forName(filtro).newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		LocalDate d = null;
+		if (fechaNacimiento != null)
+			d = LocalDate.parse(fechaNacimiento);
+		Usuario u = new Usuario(nombre, apellidos, email, user, password, d, prem);
+		u.setId(e.getId());
+		u.setListasVideos(ObtenerListasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "listas")));
+		u.setRecientes(ObtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "reciente")));
+		u.setFiltro(f);
+		return u;
 	}
 
+	@Override
 	public List<Usuario> recuperarUsuarios() {
-		// TODO Apéndice de método generado automáticamente
-		return null;
+		List<Usuario> users = new ArrayList<>();
+		List<Entidad> ent = servPersistencia.recuperarEntidades("usuario");
+		for (Entidad e : ent) {
+			e = servPersistencia.recuperarEntidad(e.getId());
+			if (e == null)
+				return null;
+			String nombre = servPersistencia.recuperarPropiedadEntidad(e, "nombre");
+			String apellidos = servPersistencia.recuperarPropiedadEntidad(e, "apellidos");
+			String email = servPersistencia.recuperarPropiedadEntidad(e, "email");
+			String user = servPersistencia.recuperarPropiedadEntidad(e, "usuario");
+			String password = servPersistencia.recuperarPropiedadEntidad(e, "password");
+			String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(e, "fecha_nac");
+			String filtro = servPersistencia.recuperarPropiedadEntidad(e, "filtro");
+			String premium = servPersistencia.recuperarPropiedadEntidad(e, "premium");
+			boolean prem = false;
+			if (premium.equals("T"))
+				prem = true;
+			else
+				prem = false;
+			
+			FiltroVideo f = null;
+			try {
+				f = (FiltroVideo) Class.forName(filtro).newInstance();
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+			LocalDate d = null;
+			if (fechaNacimiento != null)
+				d = LocalDate.parse(fechaNacimiento);
+			Usuario u = new Usuario(nombre, apellidos, email, user, password, d, prem);
+			u.setId(e.getId());
+			u.setListasVideos(ObtenerListasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "listas")));
+			u.setRecientes(ObtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "reciente")));
+			u.setFiltro(f);
+			users.add(u);
+		}
+			return users;
 	}
+
+	private LinkedList<Video> ObtenerVideosDesdeCodigos(String videos) {
+		LinkedList<Video> listaRecientes = new LinkedList<Video>();
+		if(videos != null) {
+			StringTokenizer strTok = new StringTokenizer(videos, " ");
+			AdaptadorVideo adaptadorV = AdaptadorVideo.getUnicaInstancia();
+			while (strTok.hasMoreTokens()) {
+				listaRecientes.add(adaptadorV.findVideo(Integer.valueOf((String) strTok.nextElement())));
+			}
+		}
+		return listaRecientes;
+	}
+
+	private List<ListaVideos> ObtenerListasDesdeCodigos(String lista) {
+		List<ListaVideos> listaVideo = new LinkedList<ListaVideos>();
+		if(lista != null) {
+			StringTokenizer strTok = new StringTokenizer(lista, " ");
+			AdaptadorListaVideos adaptadorV = AdaptadorListaVideos.getUnicaInstancia();
+			while (strTok.hasMoreTokens()) {
+				listaVideo.add(adaptadorV.findListaVideo(Integer.valueOf((String) strTok.nextElement())));
+			}
+		}
+		return listaVideo;
+
+	}
+
 
 }
+

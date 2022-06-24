@@ -4,8 +4,13 @@ import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Usuario {
+import um.tds.AppVideo.persistencia.DAOException;
+import um.tds.AppVideo.persistencia.FactoriaDAO;
+import um.tds.AppVideo.persistencia.IAdaptadorListaVideosDAO;
 
+public class Usuario {
+	private static final int NUM_RECIENTES = 5;
+	private static IAdaptadorListaVideosDAO adaptadorListaVideosDAO = null;
 	private int id;
 	private final String nombre;
 	private final String apellidos;
@@ -15,7 +20,8 @@ public class Usuario {
 	private final String password;
 	private final LocalDate fechaNacimiento;
 	private List<ListaVideos> listasVideos;
-	private  FiltroVideo filtro;
+	private LinkedList<Video> recientes;
+	private FiltroVideo filtro;
 
 	public Usuario(String nombre, String apellidos, String email, String usuario, String password,
 			LocalDate fechaNacimiento, boolean premium) {
@@ -27,9 +33,16 @@ public class Usuario {
 		this.usuario = usuario;
 		this.password = password;
 		this.fechaNacimiento = fechaNacimiento;
-		this.filtro= new NoFiltro();
 		this.listasVideos = new LinkedList<ListaVideos>();
-		
+		this.recientes = new LinkedList<Video>();
+		this.filtro = new NoFiltro();
+		if (adaptadorListaVideosDAO == null) {
+			try {
+				adaptadorListaVideosDAO = FactoriaDAO.getInstancia().getListaVideosDAO();
+			} catch (DAOException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
@@ -40,8 +53,6 @@ public class Usuario {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-
 	
 	public String getNombre() {
 		return nombre;
@@ -54,7 +65,7 @@ public class Usuario {
 	public String getEmail() {
 		return email;
 	}
-
+	
 	public boolean isPremium() {
 		return premium;
 	}
@@ -62,21 +73,13 @@ public class Usuario {
 	public void setPremium() {
 		this.premium = true;
 	}
-
+	
 	public String getUsuario() {
 		return usuario;
 	}
 
 	public String getPassword() {
 		return password;
-	}
-	
-	public List<ListaVideos> getListasVideos() {
-		return listasVideos;
-	}
-
-	public void setListasVideos(List<ListaVideos> listas) {
-		this.listasVideos = listas;
 	}
 
 	public LocalDate getFechaNacimiento() {
@@ -86,15 +89,73 @@ public class Usuario {
 	public FiltroVideo getFiltro() {
 		return filtro;
 	}
-
+	
 	public void setFiltro(FiltroVideo filtro) {
 		if (this.premium == true) {
 			this.filtro = filtro;
 		}
 	}
 
+	public List<Video> getRecientes() {
+		return recientes;
+	}
+
+	public void setRecientes(LinkedList<Video> list) {
+		this.recientes = list;
+	}
+
+	public List<ListaVideos> getListasVideos() {
+		return listasVideos;
+	}
+
+	public void setListasVideos(List<ListaVideos> listas) {
+		this.listasVideos = listas;
+	}
+
 	public boolean checkPassword(String password) {
 		return password.equals(password);
 	}
 
+	public boolean addListaVideos(String nombre, List<Video> videos) {
+		ListaVideos list = new ListaVideos(nombre, videos);
+		adaptadorListaVideosDAO.addListaVideos(list);
+		return this.listasVideos.add(list);
+	}
+
+	public boolean removeLista(ListaVideos lista) {
+		adaptadorListaVideosDAO.removeListaVideo(lista);
+		return listasVideos.remove(lista);
+
+	}
+
+	// TODO Con streams si se puede
+	public void addVideo(String nombre, Video video) {
+		for (ListaVideos l : this.listasVideos) {
+			if (l.getName().equals(nombre)) {
+				l.addVideo(video);
+				adaptadorListaVideosDAO.modifyListaVideo(l);
+			}
+		}
+
+	}
+
+	// TODO Con streams si se puede
+	public void deleteVideo(String nombre, Video video) {
+		for (ListaVideos l : this.listasVideos) {
+			if (l.getName().equals(nombre)) {
+				l.removeVideo(video);
+				adaptadorListaVideosDAO.modifyListaVideo(l);
+			}
+		}
+
+	}
+
+	public void addVideoRecientes(Video video) {
+		if (recientes.size() >= NUM_RECIENTES) {
+			recientes.removeLast();
+		}
+		recientes.addFirst(video);
+	}
+
 }
+

@@ -115,21 +115,21 @@ public class Login extends JPanel {
 
 		// Aceptar
 		btnAceptar.addActionListener(new ActionListener() {
-			public void
-
-					actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				String nombre = textFieldLogin.getText();
 
-				@SuppressWarnings("deprecation")
-				String password = passwordField.getText();
+				String password = "";
+				for (char c : passwordField.getPassword()) {
+					password += c;
+				}
+					
 				if (nombre.isEmpty() || password.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Campo/s vacio/s", "Error login", JOptionPane.ERROR_MESSAGE);
 				} else {
 					JOptionPane.showMessageDialog(null, "Cliente logeado correctamente", "Login cliente",
 							JOptionPane.PLAIN_MESSAGE);
 					textFieldLogin.setText("");
-					passwordField.setText(""); // TODO Comprobar silos datos son acertados o no y pasar a ventana
-												// recientes
+					passwordField.setText("");
 				}
 
 			}
