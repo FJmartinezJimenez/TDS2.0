@@ -37,20 +37,7 @@ public class VentanaPrincipal {
 	NuevasListas nuevaslistas = new NuevasListas();
 	Registro registro = new Registro();
 
-	public static void main(final String[] args) {
-
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaPrincipal ventana = new VentanaPrincipal();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
-	}
-
+	
 	public VentanaPrincipal() {
 		initialize();
 

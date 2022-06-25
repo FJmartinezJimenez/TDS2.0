@@ -18,6 +18,7 @@ import um.tds.AppVideo.persistencia.FactoriaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
+import um.tds.AppVideo.AppVideo;
 import um.tds.AppVideo.dominio.*;
 
 public class Controlador {
@@ -73,18 +74,8 @@ public class Controlador {
 		return usuario;
 	}
 	
-	public void addEtiqueta(String etiqueta, Video video) {
-		Etiqueta et = new Etiqueta(etiqueta);
-		catalogoEtiqueta.addEtiqueta(et);
-		adaptadorEtiqueta.addEtiqueta(et);
-		repositorioVideo.addEtiqueta(video, et);
-		adaptadorVideo.modifyVideo(video);
-	}
+	// USUARIOS
 	
-	public void removeEtiqueta(Etiqueta etiqueta, Video video) {
-		  video.removeEtiqueta(etiqueta);
-	}
-
 	// Login
 	public boolean login(String password, String user) {
 		Usuario usuario = RepositorioUsuario.getUnicaInstancia().getUsuario(user);
@@ -110,7 +101,7 @@ public class Controlador {
 			repositorioUsuario.addUsuario(this.usuario);
 		}
 	}
-
+	
 	// Premium
 	public void becomePremium() {
 		if (this.usuario != null) {
@@ -118,17 +109,30 @@ public class Controlador {
 			adaptadorUsuario.modifyUsuario(usuario);
 		}
 	}
-
-	// Obtener listas de videos
-	public List<ListaVideos> getListas() {
-		if (this.usuario != null) {
-			return this.usuario.getListasVideos();
-		} else {
-			return null;
-		}
+	
+	//VIDEOS 
+	
+	// Reproducir video a traves de un video 
+	public void playVideo(String url) {
+		Video v = findVideo(url);
+		AppVideo.videoWeb.playVideo(url);
+		v.incrementarnumRepro();
+		adaptadorVideo.modifyVideo(v);
+		usuario.addVideoRecientes(v);
+		adaptadorUsuario.modifyUsuario(usuario);
 
 	}
+	
+	//Parar un video
+	public void stopVideo() {
+		AppVideo.videoWeb.cancel();
+	}
+	
+	public Video findVideo(String url) {
+		return repositorioVideo.getVideo(url);
 
+	}
+	
 	// Buscar videos por etiquetas
 	public Collection<Video> searchVideos(List<Etiqueta> etiqueta) {
 		return this.repositorioVideo.searchVideos(etiqueta);
@@ -143,6 +147,40 @@ public class Controlador {
 		}
 	}
 
+	// Devolver los videos recientes
+	public List<Video> getRecientes() {
+		if (usuario != null) {
+			return this.usuario.getRecientes();
+		} else {
+			return null;
+		}
+	}
+	
+	// Añadir etiqueta
+	public void addEtiqueta(String etiqueta, Video video) {
+		Etiqueta et = new Etiqueta(etiqueta);
+		catalogoEtiqueta.addEtiqueta(et);
+		adaptadorEtiqueta.addEtiqueta(et);
+		repositorioVideo.addEtiqueta(video, et);
+		adaptadorVideo.modifyVideo(video);
+	}
+	
+	// Eliminar etiqueta
+	public void removeEtiqueta(Etiqueta etiqueta, Video video) {
+		  video.removeEtiqueta(etiqueta);
+	}
+	
+	//ETIQUETAS
+	
+	//Obtenemos todas las etiquetas
+	public List<Etiqueta> getEtiquetas(){
+		return catalogoEtiqueta.getEtiquetas();
+		
+	}
+
+	
+	//LISTAS
+	
 	// Crear Lista Videos
 	public void createList(String nombre, List<Video> lista) {
 		this.usuario.addListaVideos(nombre, lista);
@@ -156,6 +194,16 @@ public class Controlador {
 		adaptadorUsuario.modifyUsuario(usuario);
 	}
 
+	// Obtener listas de videos
+	public List<ListaVideos> getListas() {
+		if (this.usuario != null) {
+			return this.usuario.getListasVideos();
+		} else {
+			return null;
+		}
+
+	}
+	
 	// Añadir videos a la lista
 	public void addVideotoList(String nombre, Video video) {
 		this.usuario.addVideo(nombre, video);
@@ -168,14 +216,7 @@ public class Controlador {
 		adaptadorVideo.modifyVideo(video);
 	}
 
-	// Devolver los videos recientes
-	public List<Video> getRecientes() {
-		if (usuario != null) {
-			return this.usuario.getRecientes();
-		} else {
-			return null;
-		}
-	}
+	//PDF
 	
 	// De forma rapido mirar
     public void generatePDF() throws FileNotFoundException, DocumentException {
@@ -194,8 +235,4 @@ public class Controlador {
         }
     }
     
-	//y todo de los videos
-	
-	
-
 }

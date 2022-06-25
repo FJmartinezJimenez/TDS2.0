@@ -1,5 +1,6 @@
 package um.tds.AppVideo.dominio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,16 @@ public class CatalogoEtiqueta {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
+
+	}
+	
+	public List<Etiqueta> getEtiquetas(){
+		ArrayList<Etiqueta> lista = new ArrayList<Etiqueta>();
+		for (Etiqueta e : etiquetas.values()) {
+			lista.add(e);
+		}
+		
+		return lista;
 
 	}
 
