@@ -65,6 +65,18 @@ public class Controlador {
 	public Usuario getUsuario() {
 		return usuario;
 	}
+	
+	public void addEtiqueta(String etiqueta, Video video) {
+		Etiqueta et = new Etiqueta(etiqueta);
+		catalogoEtiqueta.addEtiqueta(et);
+		adaptadorEtiqueta.addEtiqueta(et);
+		repositorioVideo.addEtiqueta(video, et);
+		adaptadorVideo.modifyVideo(video);
+	}
+	
+	public void removeEtiqueta(Etiqueta etiqueta, Video video) {
+		  video.removeEtiqueta(etiqueta);
+	}
 
 	// Login
 	public boolean login(String password, String user) {
@@ -140,11 +152,13 @@ public class Controlador {
 	// Añadir videos a la lista
 	public void addVideotoList(String nombre, Video video) {
 		this.usuario.addVideo(nombre, video);
+		adaptadorVideo.modifyVideo(video);
 	}
 
 	// Eliminar video de la lista
 	public void deleteVideotoList(String nombre, Video video) {
 		this.usuario.deleteVideo(nombre, video);
+		adaptadorVideo.modifyVideo(video);
 	}
 
 	// Devolver los videos recientes
@@ -155,8 +169,27 @@ public class Controlador {
 			return null;
 		}
 	}
+	
+	// De forma rapido mirar
+    public void generatePDF() throws FileNotFoundException, DocumentException {
+        if (Controlador.getUnicaInstancia().usuario != null && Controlador.getUnicaInstancia().usuario.isPremium()) {
+            Document doc = new Document();
+            PdfWriter writer = PdfWriter.getInstance(doc, new FileOutputStream("AppVideoPdf.pdf"));
+            doc.open();
+            for (ListaVideos lista : usuario.getListasVideos()) {
+                doc.add(new Paragraph(lista.getName().toUpperCase()));
+                for (Video video : lista.getVideos()) {
+                    doc.add(new Paragraph(video.getTitulo() + " " + video.getNumRepro()));
+                }
+                doc.add(new Paragraph(" "));
+            }
+            doc.close();
+        }
+    }
 
 	//Falta top10videos, pdf, añadir y eliminar etiqueta(metodos ya hechos en sus clases respectivas), 
 	//y todo de los videos
+	
+	
 
 }

@@ -71,6 +71,7 @@ public class Video {
 		this.numRepro += 1;
 
 	}
+	
 
 	public int checkEtiqueta(List<Etiqueta> etiquet) {
 		int contador=0;

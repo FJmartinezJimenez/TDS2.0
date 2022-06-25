@@ -43,6 +43,11 @@ public class RepositorioVideo {
 	public void removeVideo(Video video) {
 			videos.remove(video.getUrl());
 	}
+	
+	//Añadimos un video
+		public void addEtiqueta(Video video, Etiqueta etiqueta) {
+				video.addEtiqueta(etiqueta);
+		}
 
 	// TODO Con Streams si es posible
 	public Collection<Video> searchVideos(FiltroVideo filtro) {
@@ -66,6 +71,29 @@ public class RepositorioVideo {
 		}
 		return set;
 	}
+	
+	
+	Comparator<Video> compareByNumRepro = new Comparator<Video>() {
+		@Override
+		public int compare(Video o1, Video o2) {
+			Integer v1 = o1.getNumRepro();
+			Integer v2 = o2.getNumRepro();
+			return v1.compareTo(v2);
+
+		}
+
+	};
+
+	public List<Video> getTop_TenVideos() {
+		ArrayList<Video> lista = new ArrayList<Video>();
+		for (Video video :videos.values()) {
+			lista.add(video);
+			}
+
+		lista.sort(compareByNumRepro);
+		return lista.subList(0, 10);
+	}
+
 
 	/* Recupera todos los videos para trabajar con ellos en memoria */
 	private void cargarCatalogo() throws DAOException {
@@ -75,5 +103,7 @@ public class RepositorioVideo {
 		}
 
 	}
+	
+	
 
 }
