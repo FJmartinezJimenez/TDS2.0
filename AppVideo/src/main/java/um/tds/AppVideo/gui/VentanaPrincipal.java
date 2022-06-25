@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.CardLayout;
+import pulsador.Luz;
 
 public class VentanaPrincipal {
 	private JFrame frame;
@@ -43,6 +44,8 @@ public class VentanaPrincipal {
 		initialize();
 
 	}
+	
+
 
 	/**
 	 * Initialize the contents of the frame.
@@ -93,6 +96,9 @@ public class VentanaPrincipal {
 		btnPremium.setBackground(Color.RED);
 		btnPremium.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelArriba.add(btnPremium);
+		
+		Luz luz = new Luz();
+		panelArriba.add(luz);
 
 		JPanel panelMenu = new JPanel();
 		panelMenu.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -219,14 +225,14 @@ public class VentanaPrincipal {
 		// Recientes
 		btnRecientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {
+				} else {*/
 					cl.show(panelPrincipal, "recientes");
 				}
 			}
-		});
+		);
 
 		// Nueva lista
 		btnNuevaLista.addActionListener(new ActionListener() {

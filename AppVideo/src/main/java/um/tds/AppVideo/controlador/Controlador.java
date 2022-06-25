@@ -15,18 +15,19 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import um.tds.AppVideo.dominio.RepositorioUsuario;
 import um.tds.AppVideo.dominio.Usuario;
-import um.tds.AppVideo.persistencia.AdaptadorVideo;
 import um.tds.AppVideo.persistencia.DAOException;
 import um.tds.AppVideo.persistencia.FactoriaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
 import um.tds.componente.CargadorVideos;
+import um.tds.componente.VideoListener;
+import um.tds.componente.Videos;
 import um.tds.componente.VideosEvent;
 import um.tds.AppVideo.AppVideo;
 import um.tds.AppVideo.dominio.*;
 
-public class Controlador {
+public class Controlador implements VideoListener {
 	private Usuario usuario;
 
 	private IAdaptadorUsuarioDAO adaptadorUsuario;
@@ -35,6 +36,7 @@ public class Controlador {
 	private RepositorioUsuario repositorioUsuario;
 	private RepositorioVideo repositorioVideo;
 	private CatalogoEtiqueta catalogoEtiqueta;
+	private CargadorVideos cargadorVideos;
 
 	// Singleton
 	private static Controlador unicaInstancia;
@@ -52,6 +54,8 @@ public class Controlador {
 		usuario = null;
 		inicializarAdaptadores();
 		inicializarRepositorios();
+		cargadorVideos = CargadorVideos.getUnicaInstancia();
+		cargadorVideos.attach(this);
 	}
 
 	// Iniciamos los adaptadores
@@ -243,20 +247,10 @@ public class Controlador {
     //CARGADOR VIDEOS 
 
 	// Cargamos los videos en el servidor y catalogo local
-
 	@Override
 	public void enteradoCambios(EventObject e) {
-
 		if (e instanceof VideosEvent) {
-
-			try {
-				AdaptadorVideo adaptadorVideo = (AdaptadorVideo) FactoriaDAO.getInstancia().getVideoDAO();
-			} catch (DAOException e1) {
-
-				e1.printStackTrace();
-			}
 			for (Video v : getVideosFromXml(((VideosEvent) e).getVideos())) {
-
 				adaptadorVideo.addVideo(v);
 				repositorioVideo.addVideo(v);
 
@@ -265,25 +259,22 @@ public class Controlador {
 
 	}
 
-	public static List<Video> getVideosFromXml(Video videos) {
-
-		List<Video> l = new LinkedList<>();
+	public static List<Video> getVideosFromXml(Videos videos) {
+		List<Video> l = new LinkedList<Video>();
 		for (um.tds.componente.Video v : videos.getVideo()) {
-
-			Video vid = new Video(v.getURL(), v.getTitulo());
+			Video vid = new Video(v.getURL(), v.getTitulo(),null);
 			vid.addEtiquetasString(v.getEtiqueta());
 			l.add(vid);
-
 		}
-
 		return l;
 
 	}
 
 	public boolean getVideosFromXml(String xml) {
-
-		return CargadorVideos.setFileVideo(xml);
+		return cargadorVideos.setFileVideo(xml);
 	}
 
+	
+	
     
 }
