@@ -38,6 +38,7 @@ public class VentanaPrincipal {
 	Registro registro = new Registro();
 
 	
+
 	public VentanaPrincipal() {
 		initialize();
 
@@ -137,6 +138,10 @@ public class VentanaPrincipal {
 
 		cl = (CardLayout) (panelPrincipal.getLayout());
 		cl.show(panelPrincipal, "login");
+		
+		/**
+		 * Ventanas
+		 */
 
 		// Registro
 		btnRegistro.addActionListener(new ActionListener() {
@@ -189,27 +194,27 @@ public class VentanaPrincipal {
 		// Explorar
 		btnExplorar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {
+				} else {*/
 					cl.show(panelPrincipal, "explorar");
 				}
 			}
 
-		});
+		);
 
 		// Mis Listas
 		btnMisListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {
+				} else {*/
 					cl.show(panelPrincipal, "mislistas");
 				}
 			}
-		});
+		);
 
 		// Recientes
 		btnRecientes.addActionListener(new ActionListener() {
@@ -226,14 +231,14 @@ public class VentanaPrincipal {
 		// Nueva lista
 		btnNuevaLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {
+				} else {*/
 					cl.show(panelPrincipal, "nuevaslistas");
 				}
 			}
-		});
+		);
 
 	}
 
