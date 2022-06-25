@@ -1,8 +1,15 @@
 package um.tds.AppVideo.controlador;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import um.tds.AppVideo.dominio.RepositorioUsuario;
 import um.tds.AppVideo.dominio.Usuario;
@@ -186,8 +193,7 @@ public class Controlador {
             doc.close();
         }
     }
-
-	//Falta top10videos, pdf, añadir y eliminar etiqueta(metodos ya hechos en sus clases respectivas), 
+    
 	//y todo de los videos
 	
 	
