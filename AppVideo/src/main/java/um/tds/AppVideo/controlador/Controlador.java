@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.EventObject;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.itextpdf.text.Document;
@@ -13,11 +15,14 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import um.tds.AppVideo.dominio.RepositorioUsuario;
 import um.tds.AppVideo.dominio.Usuario;
+import um.tds.AppVideo.persistencia.AdaptadorVideo;
 import um.tds.AppVideo.persistencia.DAOException;
 import um.tds.AppVideo.persistencia.FactoriaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorUsuarioDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorVideoDAO;
+import um.tds.componente.CargadorVideos;
+import um.tds.componente.VideosEvent;
 import um.tds.AppVideo.AppVideo;
 import um.tds.AppVideo.dominio.*;
 
@@ -234,5 +239,51 @@ public class Controlador {
             doc.close();
         }
     }
+    
+    //CARGADOR VIDEOS 
+
+	// Cargamos los videos en el servidor y catalogo local
+
+	@Override
+	public void enteradoCambios(EventObject e) {
+
+		if (e instanceof VideosEvent) {
+
+			try {
+				AdaptadorVideo adaptadorVideo = (AdaptadorVideo) FactoriaDAO.getInstancia().getVideoDAO();
+			} catch (DAOException e1) {
+
+				e1.printStackTrace();
+			}
+			for (Video v : getVideosFromXml(((VideosEvent) e).getVideos())) {
+
+				adaptadorVideo.addVideo(v);
+				repositorioVideo.addVideo(v);
+
+			}
+		}
+
+	}
+
+	public static List<Video> getVideosFromXml(Video videos) {
+
+		List<Video> l = new LinkedList<>();
+		for (um.tds.componente.Video v : videos.getVideo()) {
+
+			Video vid = new Video(v.getURL(), v.getTitulo());
+			vid.addEtiquetasString(v.getEtiqueta());
+			l.add(vid);
+
+		}
+
+		return l;
+
+	}
+
+	public boolean getVideosFromXml(String xml) {
+
+		return CargadorVideos.setFileVideo(xml);
+	}
+
     
 }

@@ -21,8 +21,8 @@ public class AppVideo
 					VentanaPrincipal ventana = new VentanaPrincipal();
 					videoWeb = new VideoWeb();
 
-					ServicioPersistencia servPersistencia = FactoriaServicioPersistencia.getInstance()
-							.getServicioPersistencia();
+					//ServicioPersistencia servPersistencia = FactoriaServicioPersistencia.getInstance()
+							//.getServicioPersistencia();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
