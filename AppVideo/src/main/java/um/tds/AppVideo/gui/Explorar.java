@@ -49,6 +49,7 @@ public class Explorar extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 
 		JPanel panelRecientes = new JPanel();
+		panelRecientes.setBackground(Color.LIGHT_GRAY);
 		panelRecientes.setBorder(new LineBorder(new Color(0, 0, 0)));
 		add(panelRecientes, BorderLayout.EAST);
 		GridBagLayout gbl_panelRecientes = new GridBagLayout();
@@ -75,7 +76,7 @@ public class Explorar extends JPanel {
 
 		DefaultListModel<String> d = new DefaultListModel<String>();
 		list = new JList<String>(d);
-		addEtiquetasList(d);
+		//addEtiquetasList(d);
 		list.addMouseListener(new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent evt) {
@@ -115,6 +116,7 @@ public class Explorar extends JPanel {
 		panel.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(Color.LIGHT_GRAY);
 		panel_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.add(panel_1, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
@@ -162,6 +164,7 @@ public class Explorar extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_2.add(scrollPane);
+		panel_3.setBackground(Color.LIGHT_GRAY);
 
 		scrollPane.setViewportView(panel_3);
 		panel_3.setLayout(new BorderLayout(0, 0));
@@ -231,6 +234,11 @@ public class Explorar extends JPanel {
 		}
 	};
 
+	public void cambioDePanel() {
+		cleanVideos();
+		textField.setText("");
+		d2.clear();
+	}
 	
 
 }

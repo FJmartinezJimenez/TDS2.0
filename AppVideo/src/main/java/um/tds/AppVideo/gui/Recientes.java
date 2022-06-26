@@ -33,6 +33,7 @@ public class Recientes extends JPanel {
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.LIGHT_GRAY);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
 		add(panel, BorderLayout.NORTH);
 		GridBagLayout gbl_panel = new GridBagLayout();
@@ -77,8 +78,9 @@ public class Recientes extends JPanel {
 		panel_1.add(scrollPane, BorderLayout.CENTER);
 		
 		panel_2 = new JPanel();
+		panel_2.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setViewportView(panel_2);
-		mostrarVideos(Controlador.getUnicaInstancia().getRecientes());
+		//mostrarVideos(Controlador.getUnicaInstancia().getRecientes());
 	}
 	
 	private ActionListener listenerButtons = new ActionListener() {

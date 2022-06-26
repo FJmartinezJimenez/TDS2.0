@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+
+import com.itextpdf.text.DocumentException;
 
 import um.tds.AppVideo.controlador.Controlador;
 
@@ -48,7 +51,7 @@ public class VentanaPrincipal {
 	private void initialize() {
 		frame = new JFrame();
 		frame.setVisible(true);
-		frame.setBounds(100, 100, 616, 376);
+		frame.setBounds(100, 100, 633, 376);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
@@ -70,12 +73,19 @@ public class VentanaPrincipal {
 		lblAppVideo.setFont(new Font("Baskerville Old Face", Font.BOLD, 23));
 		lblAppVideo.setForeground(Color.RED);
 		panelArriba.add(lblAppVideo);
+		
+		Luz luz = new Luz();
+		panelArriba.add(luz);
 
 		JSeparator separator = new JSeparator();
 		separator.setForeground(UIManager.getColor("Button.background"));
-		separator.setPreferredSize(new Dimension(96, 2));
+		separator.setPreferredSize(new Dimension(16, 2));
 		separator.setBackground(UIManager.getColor("Button.background"));
 		panelArriba.add(separator);
+		
+		JButton btnPdf = new JButton("PDF");
+		panelArriba.add(btnPdf);
+		
 
 		JButton btnRegistro = new JButton("Registro");
 		panelArriba.add(btnRegistro);
@@ -91,9 +101,6 @@ public class VentanaPrincipal {
 		btnPremium.setBackground(Color.RED);
 		btnPremium.setHorizontalAlignment(SwingConstants.RIGHT);
 		panelArriba.add(btnPremium);
-		
-		Luz luz = new Luz();
-		panelArriba.add(luz);
 
 		JPanel panelMenu = new JPanel();
 		panelMenu.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -143,6 +150,20 @@ public class VentanaPrincipal {
 		/**
 		 * Ventanas
 		 */
+		
+		btnPdf.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Controlador.getUnicaInstancia().generatePDF();
+				} catch (FileNotFoundException e1) {
+					// TODO Bloque catch generado automáticamente
+					e1.printStackTrace();
+				} catch (DocumentException e1) {
+					// TODO Bloque catch generado automáticamente
+					e1.printStackTrace();
+				}
+			}
+		});
 
 		// Registro
 		btnRegistro.addActionListener(new ActionListener() {

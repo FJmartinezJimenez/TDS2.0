@@ -32,6 +32,7 @@ public class NuevasListas extends JPanel {
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_3_1 = new JPanel();
+		panel_3_1.setBackground(Color.LIGHT_GRAY);
 		panel_3_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.add(panel_3_1, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_3_1 = new GridBagLayout();
@@ -83,6 +84,7 @@ public class NuevasListas extends JPanel {
 		panel_4.add(scrollPane_1, BorderLayout.CENTER);
 		
 		JPanel panel_4_1 = new JPanel();
+		panel_4_1.setBackground(Color.LIGHT_GRAY);
 		panel_4_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel.add(panel_4_1, BorderLayout.SOUTH);
 		GridBagLayout gbl_panel_4_1 = new GridBagLayout();
@@ -121,6 +123,7 @@ public class NuevasListas extends JPanel {
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(Color.LIGHT_GRAY);
 		panel_2.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_1.add(panel_2, BorderLayout.NORTH);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();

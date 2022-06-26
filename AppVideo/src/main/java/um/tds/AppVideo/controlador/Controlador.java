@@ -237,6 +237,17 @@ public class Controlador implements VideoListener {
 		adaptadorVideo.modifyVideo(video);
 	}
 	
+	public List<Video> getLista(String lista) {
+		List<Video> v= new LinkedList<Video>();
+		for (ListaVideos l : usuario.getListasVideos()) {
+			if (l.getName().equals(lista)) {
+				v=l.getVideos();
+			}
+
+		}
+		return v;
+	}
+	
 	
 
 	//PDF
