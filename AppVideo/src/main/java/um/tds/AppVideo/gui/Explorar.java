@@ -3,13 +3,10 @@ package um.tds.AppVideo.gui;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
@@ -20,8 +17,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -38,24 +33,6 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JList;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import javax.swing.JTextField;
-import java.awt.Insets;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.LineBorder;
-import java.awt.Color;
-import java.awt.Component;
-import javax.swing.JList;
 
 @SuppressWarnings("serial")
 public class Explorar extends JPanel {
@@ -100,7 +77,7 @@ public class Explorar extends JPanel {
 		list = new JList<String>(d);
 		addEtiquetasList(d);
 		list.addMouseListener(new MouseAdapter() {
-			
+
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
 
@@ -185,31 +162,43 @@ public class Explorar extends JPanel {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		panel_2.add(scrollPane);
-		
-	
+
 		scrollPane.setViewportView(panel_3);
 		panel_3.setLayout(new BorderLayout(0, 0));
 
+		// Busqueda
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cleanVideos();
+				mostrarVideos();
+
+			}
+		});
+
+		// Nueva Busqueda
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cleanVideos();
+				d2.clear();
+			}
+		});
 	}
 
 	public void addEtiquetasList(DefaultListModel<String> d) {
-
 		for (Etiqueta et : Controlador.getUnicaInstancia().getEtiquetas()) {
 			d.addElement(et.getNombre());
 		}
 
 	}
-	
-	
-	public void loadVideos() {
 
+	public void mostrarVideos() {
 		cleanVideos();
-		List<Etiqueta> etiquetas = new ArrayList<Etiqueta>();
+		List<String> etiquetas = new ArrayList<String>();
 		for (int i = 0; i < list_1.getModel().getSize(); i++) {
-			etiquetas.add(new Etiqueta(d2.getElementAt(i)));
+			etiquetas.add(d2.getElementAt(i));
 		}
 		String titulo = textField.getText().trim();
-		Collection<Video> set = Controlador.getUnicaInstancia().searchVideos(etiquetas);
+		Collection<Video> set = Controlador.getUnicaInstancia().searchVideos(etiquetas, titulo);
 		for (Video v : set) {
 			JButton boton = new JButton();
 			boton.setBackground(Color.gray);
@@ -217,42 +206,31 @@ public class Explorar extends JPanel {
 			ImageIcon thumb = AppVideo.videoWeb.getSmallThumb(v.getUrl());
 			boton.setIcon(thumb);
 			boton.addActionListener(listenerButtons);
-			//panel_3.add(boton);
+			panel_3.add(boton);
 		}
 		panel_3.revalidate();
 		textField.setText("");
 		d2.clear();
 	}
 	
-	private ActionListener listenerButtons = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-
-			cleanVideos();
-			panel_3.add(AppVideo.videoWeb);
-			Controlador.getUnicaInstancia().playVideo(arg0.getActionCommand());
-
-		}
-	};
-	
-	
 	public void cleanVideos() {
-
 		for (Component c : panel_3.getComponents()) {
-
 			panel_3.remove(c);
 		}
-
 		panel_3.repaint();
 		Controlador.getUnicaInstancia().stopVideo();
 
 	}
 
+	private ActionListener listenerButtons = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			cleanVideos();
+			panel_3.add(AppVideo.videoWeb);
+			Controlador.getUnicaInstancia().playVideo(arg0.getActionCommand());
+		}
+	};
+
+	
+
 }
-
-
-
-
-
-

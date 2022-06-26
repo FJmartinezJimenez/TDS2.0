@@ -72,16 +72,23 @@ public class Video {
 
 	}
 	
+	public void addEtiquetasString(List<String> et) {
+		for (String s : et) {
+			addEtiqueta(new Etiqueta(s));
+		}
 
-	public int checkEtiqueta(List<Etiqueta> etiquet) {
+	}
+	
+	public int checkEtiqueta(List<String> etiquet) {
 		int contador=0;
-		for (Etiqueta etiqueta : this.etiquetas) {
-			for (Etiqueta et : etiquet) {
-				if (et.equals(etiqueta)) {
+		for (Etiqueta et : this.getEtiquetas()) {
+			for (String et2 : etiquet) {
+				if (et2.equals(et.getNombre())) {
 					contador++;
 				}
 			}
 		}
+
 		return contador;
 	}
 }

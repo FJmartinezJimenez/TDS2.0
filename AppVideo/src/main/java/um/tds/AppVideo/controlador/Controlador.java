@@ -143,7 +143,7 @@ public class Controlador implements VideoListener {
 	}
 	
 	// Buscar videos por etiquetas
-	public Collection<Video> searchVideos(List<Etiqueta> etiqueta) {
+	public Collection<Video> searchVideos(List<String> etiqueta) {
 		return this.repositorioVideo.searchVideos(etiqueta);
 	}
 
@@ -155,6 +155,13 @@ public class Controlador implements VideoListener {
 			return null;
 		}
 	}
+	
+	//Buscar videos por titulo
+	public Collection<Video> searchVideos(List<String> e, String titulo) {
+		return repositorioVideo.searchVideos(usuario.getFiltro(), titulo, e);
+
+	}
+
 
 	// Devolver los videos recientes
 	public List<Video> getRecientes() {
@@ -164,6 +171,11 @@ public class Controlador implements VideoListener {
 			return null;
 		}
 	}
+	
+	public List<Video> getTop10() {
+		return repositorioVideo.getTop_TenVideos();
+	}
+
 	
 	// Añadir etiqueta
 	public void addEtiqueta(String etiqueta, Video video) {
@@ -224,6 +236,8 @@ public class Controlador implements VideoListener {
 		this.usuario.deleteVideo(nombre, video);
 		adaptadorVideo.modifyVideo(video);
 	}
+	
+	
 
 	//PDF
 	

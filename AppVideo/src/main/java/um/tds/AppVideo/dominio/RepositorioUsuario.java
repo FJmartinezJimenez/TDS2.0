@@ -1,5 +1,6 @@
 package um.tds.AppVideo.dominio;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,15 @@ public class RepositorioUsuario {
 			e.printStackTrace();
 		}
 
+	}
+
+	// Obtenemos todos los videos
+	public List<Usuario> getUsuarios() {
+		ArrayList<Usuario> lista = new ArrayList<Usuario>();
+		for (Usuario u : usuarios.values()) {
+			lista.add(u);
+		}
+		return lista;
 	}
 
 	// Obtenemos el usuuario

@@ -23,7 +23,6 @@ import um.tds.AppVideo.controlador.Controlador;
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.CardLayout;
 import pulsador.Luz;
 
@@ -38,14 +37,10 @@ public class VentanaPrincipal {
 	NuevasListas nuevaslistas = new NuevasListas();
 	Registro registro = new Registro();
 
-	
-
 	public VentanaPrincipal() {
 		initialize();
 
 	}
-	
-
 
 	/**
 	 * Initialize the contents of the frame.
@@ -152,12 +147,12 @@ public class VentanaPrincipal {
 		// Registro
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				//if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					cl.show(panelPrincipal, "registro");
-				}else {
+				/*}else {
 					JOptionPane.showMessageDialog(frame, "Ya hay un usuario logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				}
+				}*/
 			}
 
 		});

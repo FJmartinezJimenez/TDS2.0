@@ -95,7 +95,7 @@ public class Registro extends JPanel {
 		panelRegistro.setBackground(Color.LIGHT_GRAY);
 		add(panelRegistro, BorderLayout.CENTER);
 		GridBagLayout gbl_panelRegistro = new GridBagLayout();
-		gbl_panelRegistro.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gbl_panelRegistro.columnWidths = new int[]{0, 20, 0, 0, 0};
 		gbl_panelRegistro.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panelRegistro.columnWeights = new double[]{0.0, 0.0, 1.0, 1.0, Double.MIN_VALUE};
 		gbl_panelRegistro.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};

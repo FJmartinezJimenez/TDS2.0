@@ -27,7 +27,16 @@ public class RepositorioVideo {
 		} catch (DAOException e) {
 			e.printStackTrace();
 		}
-		
+
+	}
+
+	// Obtenemos todos los videos
+	public List<Video> getVideos() {
+		ArrayList<Video> lista = new ArrayList<Video>();
+		for (Video v : videos.values()) {
+			lista.add(v);
+		}
+		return lista;
 	}
 
 	// Obtenemos el video
@@ -35,19 +44,20 @@ public class RepositorioVideo {
 		return videos.get(video);
 	}
 
-	//Añadimos un video
+	// Añadimos un video
 	public void addVideo(Video video) {
-			videos.put(video.getUrl(), video);
+		videos.put(video.getUrl(), video);
 	}
+
 	// Borrar video
 	public void removeVideo(Video video) {
-			videos.remove(video.getUrl());
+		videos.remove(video.getUrl());
 	}
-	
-	//Añadimos un video
-		public void addEtiqueta(Video video, Etiqueta etiqueta) {
-				video.addEtiqueta(etiqueta);
-		}
+
+	// Añadimos un video
+	public void addEtiqueta(Video video, Etiqueta etiqueta) {
+		video.addEtiqueta(etiqueta);
+	}
 
 	// TODO Con Streams si es posible
 	public Collection<Video> searchVideos(FiltroVideo filtro) {
@@ -60,7 +70,7 @@ public class RepositorioVideo {
 		return set;
 	}
 
-	public Collection<Video> searchVideos(List<Etiqueta> etiquetas) {
+	public Collection<Video> searchVideos(List<String> etiquetas) {
 		HashSet<Video> set = new HashSet<Video>();
 		int contador = 0;
 		for (Video video : videos.values()) {
@@ -71,8 +81,31 @@ public class RepositorioVideo {
 		}
 		return set;
 	}
-	
-	
+
+	public Collection<Video> searchVideos(String titulo) {
+		HashSet<Video> set = new HashSet<Video>();
+		for (Video v : videos.values()) {
+			if (v.getTitulo().contains(titulo)) {
+				set.add(v);
+			}
+		}
+		return set;
+
+	}
+
+	public Collection<Video> searchVideos(FiltroVideo filtro, String titulo, List<String> etiqueta) {
+		Collection<Video> set = searchVideos(filtro);
+		if (titulo != null) {
+			set.retainAll(searchVideos(titulo));
+		}
+		if (etiqueta != null) {
+			set.retainAll(searchVideos(etiqueta));
+		}
+
+		return set;
+
+	}
+
 	Comparator<Video> compareByNumRepro = new Comparator<Video>() {
 		@Override
 		public int compare(Video o1, Video o2) {
@@ -86,14 +119,13 @@ public class RepositorioVideo {
 
 	public List<Video> getTop_TenVideos() {
 		ArrayList<Video> lista = new ArrayList<Video>();
-		for (Video video :videos.values()) {
+		for (Video video : videos.values()) {
 			lista.add(video);
-			}
+		}
 
 		lista.sort(compareByNumRepro);
 		return lista.subList(0, 10);
 	}
-
 
 	/* Recupera todos los videos para trabajar con ellos en memoria */
 	private void cargarCatalogo() throws DAOException {
@@ -103,7 +135,4 @@ public class RepositorioVideo {
 		}
 
 	}
-	
-	
-
 }
