@@ -257,7 +257,7 @@ public class Registro extends JPanel {
 							JOptionPane.ERROR_MESSAGE);
 
 				}else {
-					Controlador.getUnicaInstancia().registrarUsuario(nombre, apellidos, email, false, usuario, password2, fecha);
+					Controlador.getUnicaInstancia().registrarUsuario(nombre, apellidos, email, usuario, password2, fecha, false);
 						JOptionPane.showMessageDialog(null, "Usuario registrado correctamente", "Usuario registrado",
 								JOptionPane.INFORMATION_MESSAGE);
 				}

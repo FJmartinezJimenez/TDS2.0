@@ -3,7 +3,7 @@ package um.tds.AppVideo.persistencia;
 public abstract class FactoriaDAO {
 	private static FactoriaDAO unicaInstancia;
 
-	public static final String DAO_TDS = "um.tds.persistencia.AppVideo.TDSFactoriaDAO";
+	public static final String DAO_TDS = "um.tds.AppVideo.persistencia.TDSFactoriaDAO";
 
 	public static FactoriaDAO getInstancia(String tipo) throws DAOException {
 		if (unicaInstancia == null)

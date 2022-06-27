@@ -1,4 +1,5 @@
 package um.tds.AppVideo.dominio;
+import java.util.ArrayList;
 import java.util.List;
 public class Video {
 	private int id;
@@ -7,13 +8,15 @@ public class Video {
 	private int numRepro;
 	private List<Etiqueta> etiquetas;
 
-	public Video(String url, String titulo, List<Etiqueta> etiquetas) {
+	public Video(String url, String titulo) { // Creado sin etiquetas
+
 		this.id = 0;
 		this.url = url;
 		this.titulo = titulo;
 		this.numRepro = 0;
-		this.etiquetas = etiquetas;
+		etiquetas = new ArrayList<Etiqueta>();
 	}
+
 	
 
 	public int getId() {

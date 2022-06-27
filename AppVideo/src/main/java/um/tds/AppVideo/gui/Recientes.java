@@ -80,7 +80,7 @@ public class Recientes extends JPanel {
 		panel_2 = new JPanel();
 		panel_2.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setViewportView(panel_2);
-		//mostrarVideos(Controlador.getUnicaInstancia().getRecientes());
+		panel_2.setLayout(new BorderLayout(0, 0));
 	}
 	
 	private ActionListener listenerButtons = new ActionListener() {
@@ -91,6 +91,12 @@ public class Recientes extends JPanel {
 			Controlador.getUnicaInstancia().playVideo(arg0.getActionCommand());
 		}
 	};
+	
+	void entrada() {
+		if(Controlador.getUnicaInstancia().getRecientes() != null) {
+			mostrarVideos(Controlador.getUnicaInstancia().getRecientes());
+		}
+	}
 	
 	private void mostrarVideos(List<Video> lista) {
 		for (Video video : lista) {
@@ -115,8 +121,7 @@ public class Recientes extends JPanel {
 		panel_2.repaint();
 	}
 
-	
-	
-
-
+	public void cambioDePanel() {
+		cleanVideos();
+	}	
 }

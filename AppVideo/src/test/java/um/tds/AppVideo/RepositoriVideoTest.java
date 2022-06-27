@@ -35,19 +35,19 @@ public class RepositoriVideoTest {
 		Etiqueta etiqueta = new Etiqueta("etiqueta");
 		ArrayList<Etiqueta> a = new ArrayList<Etiqueta>();
 		a.add(etiqueta);
-		Video v1 = new Video("https://www.youtube.com/watch?v=rFX5bPxqvRs", "No Soy Un Superman",a);
+		Video v1 = new Video("https://www.youtube.com/watch?v=rFX5bPxqvRs", "No Soy Un Superman");
 		v1.setId(1);
 		v1.setNumRepro(5);
 		videos.addLast(v1);
 		
 		Video v2 = new Video("https://www.youtube.com/watch?v=Z1Vjb2LBJJA",
-				"DRAGON BALL GT RAP | PORTA | VIDEO OFICIAL RESUBIDO",null);
+				"DRAGON BALL GT RAP | PORTA | VIDEO OFICIAL RESUBIDO");
 		v2.setId(15);
 		v2.setNumRepro(2);
 		videos.addLast(v2);
 
 		Video v3 = new Video("https://www.youtube.com/watch?v=fPO76Jlnz6c",
-				"Coolio - Gangsta's Paradise (feat. L.V.) [Video Musical Oficial]",null);
+				"Coolio - Gangsta's Paradise (feat. L.V.) [Video Musical Oficial]");
 		v3.setId(4);
 		v3.setNumRepro(1);
 		videos.addLast(v3);

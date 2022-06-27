@@ -111,7 +111,7 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 		String url = servPersistencia.recuperarPropiedadEntidad(e, "url");
 		String numrepro = servPersistencia.recuperarPropiedadEntidad(e, "num_repro");
 		String etiquetas = servPersistencia.recuperarPropiedadEntidad(e, "etiqueta");
-		Video v = new Video(url, titulo, null);
+		Video v = new Video(url, titulo);
 		v.setNumRepro(Integer.parseInt(numrepro));
 		v.setId(e.getId());
 		v.setEtiquetas(obtenerEtiquetasDesdeCodigos(etiquetas));
@@ -131,7 +131,7 @@ public class AdaptadorVideo implements IAdaptadorVideoDAO {
 			String url = servPersistencia.recuperarPropiedadEntidad(e, "url");
 			String numrepro = servPersistencia.recuperarPropiedadEntidad(e, "num_repro");
 			String etiquetas = servPersistencia.recuperarPropiedadEntidad(e, "etiqueta");
-			Video video = new Video(url, titulo, null);
+			Video video = new Video(url, titulo);
 			video.setNumRepro(Integer.parseInt(numrepro));
 			video.setId(e.getId());
 			video.setEtiquetas(obtenerEtiquetasDesdeCodigos(etiquetas));

@@ -25,11 +25,16 @@ import java.util.List;
 import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class MisListas extends JPanel {
 	JPanel panel_2 = new JPanel();
 	JPanel panel_5 = new JPanel();
+	JPanel panel_6 = new JPanel();
+	JPanel panel_7 = new JPanel();
+	JPanel panel_8 = new JPanel();
+	
 	/**
 	 * Create the application.
 	 */
@@ -69,9 +74,6 @@ public class MisListas extends JPanel {
 		panel_3.add(lblNewLabel, gbc_lblNewLabel);
 
 		comboBox.addItem("");
-		for (ListaVideos lista : Controlador.getUnicaInstancia().getListas()) {
-			comboBox.addItem(lista.getName());
-		}
 
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -114,6 +116,7 @@ public class MisListas extends JPanel {
 		panel_1.add(scrollPane, BorderLayout.CENTER);
 		panel_5.setBackground(Color.LIGHT_GRAY);
 		scrollPane.setViewportView(panel_5);
+		panel_5.setLayout(new BoxLayout(panel_5, BoxLayout.X_AXIS));
 
 		JPanel panel_4 = new JPanel();
 		panel_4.setBackground(Color.LIGHT_GRAY);
@@ -125,7 +128,7 @@ public class MisListas extends JPanel {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				comboBox.setSelectedItem(0);
-				cleanPanel();
+				cleanVideos();
 			}
 		});
 
@@ -135,11 +138,64 @@ public class MisListas extends JPanel {
 		panel_2.setBackground(Color.LIGHT_GRAY);
 		add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(new BorderLayout(0, 0));
+		
+		
+		panel_6.setBackground(Color.LIGHT_GRAY);
+		panel_2.add(panel_6, BorderLayout.NORTH);
+		panel_6.setLayout(new BorderLayout(0, 0));
+		
+		panel_7.setBackground(Color.LIGHT_GRAY);
+		panel_2.add(panel_7, BorderLayout.SOUTH);
+		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
+		
+		panel_8.setBackground(Color.LIGHT_GRAY);
+		panel_2.add(panel_8, BorderLayout.CENTER);
 
+	}
+	
+	void entrada() {
+		if(Controlador.getUnicaInstancia().getListas().size() >0) {
+			for (ListaVideos lista : Controlador.getUnicaInstancia().getListas()) {
+				comboBox.addItem(lista.getName());
+			}
+		}
 	}
 
 	private void reproducirVideo() {
+		cleanVideos();
+		JLabel lblAadirEtiqueta = new JLabel("Añadir etiqueta:");
+		panel_7.add(lblAadirEtiqueta);
 		
+		JTextField textField = new JTextField();
+		panel_7.add(textField);
+		textField.setColumns(10);
+		JButton btnAadir = new JButton("Añadir");
+		panel_7.add(btnAadir);
+		
+		
+		JLabel lblTitulo = new JLabel("Titulo:" + Controlador.getUnicaInstancia().findVideo(videoSeleccionado).getTitulo());
+		panel_6.add(lblTitulo);
+		
+		JLabel lblNReproducciones = new JLabel("Nº reproducciones: " + Controlador.getUnicaInstancia().findVideo(videoSeleccionado).getNumRepro());
+		panel_6.add(lblNReproducciones, BorderLayout.SOUTH);
+		
+		panel_8.add(AppVideo.videoWeb);
+		Controlador.getUnicaInstancia().playVideo(videoSeleccionado);
+		
+
+		// Boton añadir etiqueta
+		btnAadir.addActionListener(new ActionListener() { 
+			public void actionPerformed(ActionEvent e) {
+				if (textField.getText() != "" && textField.getText() != null) {
+					Controlador.getUnicaInstancia().addEtiqueta(
+							textField.getText(), Controlador.getUnicaInstancia().findVideo(videoSeleccionado));
+				}
+			}
+
+		});
+		
+		panel_8.revalidate();
+		panel_8.repaint();
 
 	}
 	
@@ -165,7 +221,7 @@ public class MisListas extends JPanel {
 		panel_5.repaint();
 	}
 
-	private void cleanPanel() {
+	private void cleanVideos() {
 		for (Component c : panel_2.getComponents()) {
 			panel_2.remove(c);
 		}
@@ -181,5 +237,15 @@ public class MisListas extends JPanel {
 
 		}
 	};
+	
+	
+	public void cambioDePanel() {
+		int size = comboBox.getItemCount()-1;
+		for (int i = size; i > 0; i--) {
+			comboBox.removeItemAt(i);;
+		  
+		}
+		cleanVideos();
+	}	
 
 }

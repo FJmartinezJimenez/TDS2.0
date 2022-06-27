@@ -15,6 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
+
+import um.tds.AppVideo.controlador.Controlador;
+
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import java.awt.Dimension;
@@ -126,8 +129,13 @@ public class Login extends JPanel {
 				if (nombre.isEmpty() || password.isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Campo/s vacio/s", "Error login", JOptionPane.ERROR_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(null, "Cliente logeado correctamente", "Login cliente",
+					if(Controlador.getUnicaInstancia().login(password,nombre)) {
+						JOptionPane.showMessageDialog(null, "Cliente logeado correctamente", "Login cliente",
 							JOptionPane.PLAIN_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(null, "Ha sucedido un error", "Error login", JOptionPane.ERROR_MESSAGE);
+					}
+					
 					textFieldLogin.setText("");
 					passwordField.setText("");
 				}

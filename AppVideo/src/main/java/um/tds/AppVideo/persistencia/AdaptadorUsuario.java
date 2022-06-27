@@ -189,47 +189,75 @@ public class AdaptadorUsuario  implements IAdaptadorUsuarioDAO {
 		u.setFiltro(f);
 		return u;
 	}
-
+	
 	@Override
 	public List<Usuario> recuperarUsuarios() {
+
 		List<Usuario> users = new ArrayList<>();
-		List<Entidad> ent = servPersistencia.recuperarEntidades("usuario");
+		List<Entidad> ent = servPersistencia.recuperarEntidades("Usuario");
 		for (Entidad e : ent) {
-			e = servPersistencia.recuperarEntidad(e.getId());
-			if (e == null)
-				return null;
-			String nombre = servPersistencia.recuperarPropiedadEntidad(e, "nombre");
-			String apellidos = servPersistencia.recuperarPropiedadEntidad(e, "apellidos");
-			String email = servPersistencia.recuperarPropiedadEntidad(e, "email");
-			String user = servPersistencia.recuperarPropiedadEntidad(e, "usuario");
-			String password = servPersistencia.recuperarPropiedadEntidad(e, "password");
-			String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(e, "fecha_nac");
-			String filtro = servPersistencia.recuperarPropiedadEntidad(e, "filtro");
-			String premium = servPersistencia.recuperarPropiedadEntidad(e, "premium");
-			boolean prem = false;
-			if (premium.equals("T"))
-				prem = true;
-			else
-				prem = false;
-			
-			FiltroVideo f = null;
-			try {
-				f = (FiltroVideo) Class.forName(filtro).newInstance();
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-			LocalDate d = null;
-			if (fechaNacimiento != null)
-				d = LocalDate.parse(fechaNacimiento);
-			Usuario u = new Usuario(nombre, apellidos, email, user, password, d, prem);
-			u.setId(e.getId());
-			u.setListasVideos(ObtenerListasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "listas")));
-			u.setRecientes(ObtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "reciente")));
-			u.setFiltro(f);
-			users.add(u);
+			// servPersistencia.borrarEntidad(e);
+			Entidad eaux = servPersistencia.recuperarEntidad(e.getId());
+			users.add(buildUsuario(eaux));
+
 		}
-			return users;
+
+		return users;
+
 	}
+
+	private Usuario buildUsuario(Entidad e) {
+		if (e == null)
+			return null;
+
+		String nombre = servPersistencia.recuperarPropiedadEntidad(e, "nombre");
+		String apellidos = servPersistencia.recuperarPropiedadEntidad(e, "apellidos");
+		String email = servPersistencia.recuperarPropiedadEntidad(e, "email");
+		String user = servPersistencia.recuperarPropiedadEntidad(e, "usuario");
+		String password = servPersistencia.recuperarPropiedadEntidad(e, "password");
+		String fechaNacimiento = servPersistencia.recuperarPropiedadEntidad(e, "fecha_nac");
+		String premium = servPersistencia.recuperarPropiedadEntidad(e, "premium");
+
+		String filtro = servPersistencia.recuperarPropiedadEntidad(e, "filtro");
+		FiltroVideo f = null;
+
+		try {
+			f = (FiltroVideo) Class.forName(filtro).newInstance();
+
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e1) {
+
+			e1.printStackTrace();
+		}
+
+		if (f == null) {
+
+			System.out.println("filtro nulo cuidado");
+		}
+
+		boolean prem = false;
+
+		if (premium.equals("T"))
+			prem = true;
+		else
+			prem = false;
+
+		LocalDate d = null;
+
+		if (fechaNacimiento != null)
+			d = LocalDate.parse(fechaNacimiento);
+		Usuario u = new Usuario(nombre, apellidos, email, user, password, d,prem);
+
+		u.setId(e.getId());
+
+		u.setListasVideos(ObtenerListasDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "listas")));
+
+		u.setRecientes(ObtenerVideosDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(e, "recientes")));
+
+		u.setFiltro(f);
+
+		return u;
+
+	}	
 
 	private LinkedList<Video> ObtenerVideosDesdeCodigos(String videos) {
 		LinkedList<Video> listaRecientes = new LinkedList<Video>();

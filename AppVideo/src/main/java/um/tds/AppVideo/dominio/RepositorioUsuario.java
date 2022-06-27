@@ -45,7 +45,12 @@ public class RepositorioUsuario {
 
 	// Obtenemos el usuuario
 	public Usuario getUsuario(String usuario) {
-		return usuarios.get(usuario);
+		Usuario user = null;
+		for (Usuario u : usuarios.values()) {
+			if (u.getUsuario().equals(usuario))
+				user = u;
+		}
+		return user;
 	}
 
 	// Añadir usuario

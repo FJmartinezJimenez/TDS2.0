@@ -13,8 +13,7 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
-import um.tds.AppVideo.dominio.RepositorioUsuario;
-import um.tds.AppVideo.dominio.Usuario;
+import um.tds.AppVideo.persistencia.AdaptadorVideo;
 import um.tds.AppVideo.persistencia.DAOException;
 import um.tds.AppVideo.persistencia.FactoriaDAO;
 import um.tds.AppVideo.persistencia.IAdaptadorEtiquetaDAO;
@@ -51,7 +50,7 @@ public class Controlador implements VideoListener {
 
 	// Controlador
 	private Controlador() {
-		usuario = null;
+		usuario =null;
 		inicializarAdaptadores();
 		inicializarRepositorios();
 		cargadorVideos = CargadorVideos.getUnicaInstancia();
@@ -87,9 +86,9 @@ public class Controlador implements VideoListener {
 	
 	// Login
 	public boolean login(String password, String user) {
-		Usuario usuario = RepositorioUsuario.getUnicaInstancia().getUsuario(user);
-		if (usuario != null && usuario.checkPassword(password)) {
-			this.usuario = usuario;
+		Usuario usu = RepositorioUsuario.getUnicaInstancia().getUsuario(user);
+		if (usu != null && usu.checkPassword(password)) {
+			this.usuario = usu;
 			return true;
 		} else {
 			return false;
@@ -102,8 +101,8 @@ public class Controlador implements VideoListener {
 	}
 
 	// Registrar usuario
-	public void registrarUsuario(String nombre, String apellidos, String email, boolean premium, String usuario,
-			String password, LocalDate fechaNac) {
+	public void registrarUsuario(String nombre, String apellidos, String email, String usuario,
+			String password, LocalDate fechaNac, boolean premium) {
 		if (this.repositorioUsuario.getUsuario(usuario) == null) {
 			this.usuario = new Usuario(nombre, apellidos, email, usuario, password, fechaNac, premium);
 			adaptadorUsuario.addUsuario(this.usuario);
@@ -157,6 +156,10 @@ public class Controlador implements VideoListener {
 	}
 	
 	//Buscar videos por titulo
+	public Collection<Video> searchVideos(String titulo) {
+		return repositorioVideo.searchVideos(titulo);
+	}
+	//Buscar videos por titulo,filtro y etiqueta
 	public Collection<Video> searchVideos(List<String> e, String titulo) {
 		return repositorioVideo.searchVideos(usuario.getFiltro(), titulo, e);
 
@@ -172,6 +175,7 @@ public class Controlador implements VideoListener {
 		}
 	}
 	
+	//Devuelve la lista de los 10 videos mas vistos
 	public List<Video> getTop10() {
 		return repositorioVideo.getTop_TenVideos();
 	}
@@ -199,13 +203,12 @@ public class Controlador implements VideoListener {
 		
 	}
 
-	
 	//LISTAS
-	
 	// Crear Lista Videos
-	public void createList(String nombre, List<Video> lista) {
-		this.usuario.addListaVideos(nombre, lista);
+	public ListaVideos createList(String nombre) {
+		ListaVideos l = this.usuario.addListaVideos(nombre);
 		adaptadorUsuario.modifyUsuario(usuario);
+		return l;
 	}
 
 	// Eliminar lista de videos
@@ -213,6 +216,16 @@ public class Controlador implements VideoListener {
 		ListaVideos l = new ListaVideos(nombre);
 		usuario.removeLista(l);
 		adaptadorUsuario.modifyUsuario(usuario);
+	}
+	
+	public ListaVideos findLista(String nombre) {
+		ListaVideos list = null;
+		for (ListaVideos l : usuario.getListasVideos()) {
+			if (l.getName().equals(nombre)) {
+				list=l;
+			}
+		}
+		return list;
 	}
 
 	// Obtener listas de videos
@@ -237,13 +250,13 @@ public class Controlador implements VideoListener {
 		adaptadorVideo.modifyVideo(video);
 	}
 	
+	//Devolver los videos de una lista
 	public List<Video> getLista(String lista) {
 		List<Video> v= new LinkedList<Video>();
 		for (ListaVideos l : usuario.getListasVideos()) {
 			if (l.getName().equals(lista)) {
 				v=l.getVideos();
 			}
-
 		}
 		return v;
 	}
@@ -275,19 +288,23 @@ public class Controlador implements VideoListener {
 	@Override
 	public void enteradoCambios(EventObject e) {
 		if (e instanceof VideosEvent) {
+			try {
+				AdaptadorVideo adaptadorVideo = (AdaptadorVideo) FactoriaDAO.getInstancia().getVideoDAO();
+			} catch (DAOException e1) {
+
+				e1.printStackTrace();
+			} 
 			for (Video v : getVideosFromXml(((VideosEvent) e).getVideos())) {
 				adaptadorVideo.addVideo(v);
 				repositorioVideo.addVideo(v);
-
 			}
 		}
-
 	}
 
 	public static List<Video> getVideosFromXml(Videos videos) {
 		List<Video> l = new LinkedList<Video>();
 		for (um.tds.componente.Video v : videos.getVideo()) {
-			Video vid = new Video(v.getURL(), v.getTitulo(),null);
+			Video vid = new Video(v.getURL(), v.getTitulo());
 			vid.addEtiquetasString(v.getEtiqueta());
 			l.add(vid);
 		}
@@ -297,6 +314,13 @@ public class Controlador implements VideoListener {
 
 	public boolean getVideosFromXml(String xml) {
 		return cargadorVideos.setFileVideo(xml);
+	}
+
+	public ListaVideos createList(String name, List<Video> videos) {
+		ListaVideos l = this.usuario.addListaVideos(name,videos);
+		adaptadorUsuario.modifyUsuario(usuario);
+		return l;
+		
 	}
 
 	

@@ -116,10 +116,11 @@ public class Usuario {
 		return password.equals(password);
 	}
 
-	public boolean addListaVideos(String nombre, List<Video> videos) {
-		ListaVideos list = new ListaVideos(nombre, videos);
+	public ListaVideos addListaVideos(String nombre) {
+		ListaVideos list = new ListaVideos(nombre);
 		adaptadorListaVideosDAO.addListaVideos(list);
-		return this.listasVideos.add(list);
+		this.listasVideos.add(list);
+		return list;
 	}
 
 	public boolean removeLista(ListaVideos lista) {
@@ -155,6 +156,13 @@ public class Usuario {
 			recientes.removeLast();
 		}
 		recientes.addFirst(video);
+	}
+
+	public ListaVideos addListaVideos(String name, List<Video> videos) {
+		ListaVideos list = new ListaVideos(nombre,videos);
+		adaptadorListaVideosDAO.addListaVideos(list);
+		this.listasVideos.add(list);
+		return list;
 	}
 
 }

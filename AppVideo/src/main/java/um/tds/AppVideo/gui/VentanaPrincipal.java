@@ -10,8 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 
+import java.util.EventObject;
+
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,13 +26,16 @@ import com.itextpdf.text.DocumentException;
 
 import um.tds.AppVideo.controlador.Controlador;
 
+
 import javax.swing.JSeparator;
 import javax.swing.UIManager;
 import java.awt.Dimension;
 import java.awt.CardLayout;
+
+import pulsador.IEncendidoListener;
 import pulsador.Luz;
 
-public class VentanaPrincipal {
+public class VentanaPrincipal  implements IEncendidoListener {
 	private JFrame frame;
 	private CardLayout cl;
 	private JPanel activeCard;
@@ -42,7 +48,6 @@ public class VentanaPrincipal {
 
 	public VentanaPrincipal() {
 		initialize();
-
 	}
 
 	/**
@@ -76,6 +81,9 @@ public class VentanaPrincipal {
 		
 		Luz luz = new Luz();
 		panelArriba.add(luz);
+		luz.setColor(Color.YELLOW);
+		luz.addEncendidoListener((IEncendidoListener) this);
+
 
 		JSeparator separator = new JSeparator();
 		separator.setForeground(UIManager.getColor("Button.background"));
@@ -168,12 +176,12 @@ public class VentanaPrincipal {
 		// Registro
 		btnRegistro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					cl.show(panelPrincipal, "registro");
-				/*}else {
+				}else {
 					JOptionPane.showMessageDialog(frame, "Ya hay un usuario logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				}*/
+				}
 			}
 
 		});
@@ -216,51 +224,88 @@ public class VentanaPrincipal {
 		// Explorar
 		btnExplorar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {*/
+				} else {
+					switchWindow();
+					activeCard = explorar;
 					cl.show(panelPrincipal, "explorar");
 				}
 			}
-
-		);
+			});
 
 		// Mis Listas
 		btnMisListas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {*/
+				} else {
+					mislistas.entrada();
+					switchWindow();
+					activeCard = mislistas;
 					cl.show(panelPrincipal, "mislistas");
 				}
 			}
-		);
+			});
 
 		// Recientes
 		btnRecientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {*/
+				} else {
+					recientes.entrada();
+					switchWindow();
+					activeCard =recientes;
 					cl.show(panelPrincipal, "recientes");
 				}
 			}
-		);
+		});
 
 		// Nueva lista
 		btnNuevaLista.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				/*if (Controlador.getUnicaInstancia().getUsuario() == null) {
+				if (Controlador.getUnicaInstancia().getUsuario() == null) {
 					JOptionPane.showMessageDialog(frame, "No estas logueado", "Error usuario",
 							JOptionPane.WARNING_MESSAGE);
-				} else {*/
+				} else {
+					switchWindow();
+					activeCard = nuevaslistas;
 					cl.show(panelPrincipal, "nuevaslistas");
 				}
 			}
-		);
+		});
+	}
+	
+	@Override
+	public void enteradoCambioEncendido(EventObject evt) {
+		JFileChooser fileChooser = new JFileChooser();
+		int retChooser = fileChooser.showOpenDialog(null);
+		if (retChooser == JFileChooser.APPROVE_OPTION) {
+			String pwd = fileChooser.getSelectedFile().getAbsolutePath();
+			Controlador.getUnicaInstancia().getVideosFromXml(pwd);
+		}else {
+			JOptionPane.showMessageDialog(frame, "Sin fichero seleccionado", "Error fichero",
+					JOptionPane.WARNING_MESSAGE);
+		}
+
+	}
+	
+	//Dependiendo de la ventana procedemos de una manera o de otra
+	public void switchWindow() {
+		if (activeCard instanceof Explorar) {
+			explorar.cambioDePanel();
+		}else if (activeCard instanceof Recientes) {
+			recientes.cambioDePanel();
+		} else if (activeCard instanceof MisListas) {
+			mislistas.cambioDePanel();
+		}
+		else if (activeCard instanceof NuevasListas) {
+			nuevaslistas.cambioDePanel();
+		}
 
 	}
 

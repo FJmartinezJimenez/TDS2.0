@@ -32,6 +32,7 @@ import um.tds.AppVideo.dominio.Video;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JList;
+import javax.swing.BoxLayout;
 
 
 @SuppressWarnings("serial")
@@ -75,17 +76,13 @@ public class Explorar extends JPanel {
 		panelRecientes.add(scrollPane_1, gbc_scrollPane_1);
 
 		DefaultListModel<String> d = new DefaultListModel<String>();
+		addEtiquetasList(d);
 		list = new JList<String>(d);
-		//addEtiquetasList(d);
 		list.addMouseListener(new MouseAdapter() {
-
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
-
 					String aux = (String) list.getSelectedValue();
-
 					d2.addElement(aux);
-
 				}
 			}
 		});
@@ -167,7 +164,7 @@ public class Explorar extends JPanel {
 		panel_3.setBackground(Color.LIGHT_GRAY);
 
 		scrollPane.setViewportView(panel_3);
-		panel_3.setLayout(new BorderLayout(0, 0));
+		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.X_AXIS));
 
 		// Busqueda
 		btnNewButton.addActionListener(new ActionListener() {
@@ -191,7 +188,6 @@ public class Explorar extends JPanel {
 		for (Etiqueta et : Controlador.getUnicaInstancia().getEtiquetas()) {
 			d.addElement(et.getNombre());
 		}
-
 	}
 
 	public void mostrarVideos() {

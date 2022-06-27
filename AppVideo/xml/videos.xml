@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<videos xmlns="http://www.tds.es/videos" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+	xs:schemaLocation="http://www.tds.es/videos videos.xsd">
+	
+	<video titulo="I Need You | Sons of Anarchy">
+		<URL><![CDATA[https://www.youtube.com/watch?v=DlaHxL3mHAU]]></URL>
+		<etiqueta>Series</etiqueta>
+		<etiqueta>Prime video</etiqueta>
+	</video>
+
+	<video titulo="Soldier Boy | Guest Appearance on Solid Gold">
+		<URL><![CDATA[https://www.youtube.com/watch?v=li2WDMgHxD0]]></URL>
+		<etiqueta>Series</etiqueta>
+		<etiqueta>Prime video</etiqueta>
+	</video>
+	
+	<video titulo="THANK YOU, CRISTIANO RONALDO | Real Madrid Official Video">
+		<URL><![CDATA[https://www.youtube.com/watch?v=5hFd6zGkxLE]]></URL>
+		<etiqueta>Futbol</etiqueta>
+	</video>
+
+	<video titulo="KIM ANGEL SE ENFRENTA A MADELMAN EN UN ENTRENO DE PIERNAS (Muy divertido) - Victor Valdivia">
+		<URL><![CDATA[https://www.youtube.com/watch?v=JzSkw7jJ21A]]></URL>
+		<etiqueta>Fitness</etiqueta>
+	</video>
+	
+	<video titulo="Vinicius Junior 2022 ► Insane Skills, Goals and Assists | HD">
+		<URL><![CDATA[https://www.youtube.com/watch?v=WugPrY2JF_g]]></URL>
+		<etiqueta>Futbol</etiqueta>
+	</video>
+	
+	<video titulo="RUTINA DE PECHO MAS VOLUMEN Y DUREZA I ISMAEL MARTINEZ">
+		<URL><![CDATA[https://www.youtube.com/watch?v=kqTzgTdsips&t=672s]]></URL>
+		<etiqueta>Futbol</etiqueta>
+	</video>
+
+
+
+</videos>

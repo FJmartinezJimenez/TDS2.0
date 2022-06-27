@@ -72,15 +72,34 @@ public class RepositorioVideo {
 
 	public Collection<Video> searchVideos(List<String> etiquetas) {
 		HashSet<Video> set = new HashSet<Video>();
-		int contador = 0;
-		for (Video video : videos.values()) {
-			contador = video.checkEtiqueta(etiquetas);
-			if (contador == etiquetas.size()) {
-				set.add(video);
+		int control = 0;
+
+		for (Video v : videos.values()) {
+
+			for (Etiqueta et : v.getEtiquetas()) {
+
+				for (String et2 : etiquetas) {
+
+					if (et2.equals(et.getNombre())) {
+
+						control += 1;
+					}
+
+				}
 			}
+
+			if (etiquetas.size() == control) {
+
+				set.add(v);
+
+			}
+			control = 0;
 		}
+
 		return set;
+
 	}
+
 
 	public Collection<Video> searchVideos(String titulo) {
 		HashSet<Video> set = new HashSet<Video>();
@@ -122,9 +141,13 @@ public class RepositorioVideo {
 		for (Video video : videos.values()) {
 			lista.add(video);
 		}
-
+		
 		lista.sort(compareByNumRepro);
-		return lista.subList(0, 10);
+		if(lista.size()>10) {
+			return lista.subList(0, 10);
+		}else {
+			return lista;
+		}
 	}
 
 	/* Recupera todos los videos para trabajar con ellos en memoria */
